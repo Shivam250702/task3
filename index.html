@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading State Example</title>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.3/dist/tippy.css" />
+  <link rel="stylesheet" href="root.css">
+</head>
+<body>
+  <div id="loading-overlay">
+    Loading for 2 Sec...
+  </div>
+
+  <div class="input-field">
+    <input type="text" placeholder="Type here..." id="inputField" />
+    <div class="input-popup" data-tippy-content="hover">
+      <span>Hovered</span>
+    </div>
+    <div class="input-popup" data-tippy-content="focused">
+      <span>Focused</span>
+    </div>
+    <div class="input-popup" data-tippy-content="typing" id="typingPopup">
+      <span>Typing...</span>
+    </div>
+  </div>
+  
+  <button class="button" onclick="handleButtonClick()">Submit</button>
+
+  <script src="https://unpkg.com/tippy.js@6.3.3/dist/tippy.all.min.js"></script>
+  <script>
+    tippy('.input-field .input-popup', {
+      placement: 'top',
+      arrow: false,
+    });
+
+    var inputField = document.getElementById("inputField");
+    var typingPopup = tippy('#typingPopup')[0];
+    var inputFieldContainer = document.getElementById("inputFieldContainer");
+    inputField.addEventListener("mouseover", function () {
+      showPopup("hover");
+    });
+
+    inputField.addEventListener("focus", function () {
+      showPopup("focused");
+    });
+
+    inputField.addEventListener("input", function () {
+      showPopup("typing");
+    });
+
+    inputField.addEventListener("mouseout", function () {
+      hidePopups();
+    });
+
+    function showPopup(content) {
+      hidePopups();
+      if (content === "typing") {
+        typingPopup.show();
+        setTimeout(function () {
+          typingPopup.hide();
+        }, 2000);
+      } else {
+        tippy('.input-field .input-popup[data-tippy-content="' + content + '"]').show();
+      }
+    }
+
+    function hidePopups() {
+      tippy('.input-field .input-popup').hide();
+    }
+
+    function handleButtonClick() {
+      var body = document.body;
+      var inputField = document.querySelector(".input-field");
+      var submitBtn = document.querySelector(".button");
+
+      body.classList.add("loading");
+      submitBtn.disabled = true;
+      inputField.classList.add("disabled");
+
+      setTimeout(function () {
+        body.classList.remove("loading");
+        submitBtn.disabled = false;
+        inputField.classList.remove("disabled");
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
